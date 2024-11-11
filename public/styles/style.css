@@ -1,0 +1,17 @@
+#listaTareas {
+    width: 100%;
+    max-width: 600px;
+    counter-reset: item;
+    padding-left: 2.5rem; /* Espacio para los números */
+}
+
+#listaTareas li {
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+#listaTareas li:hover {
+    background-color: #e9ecef;
+}
