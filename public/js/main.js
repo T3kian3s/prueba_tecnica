@@ -1,52 +1,94 @@
-let arrayTareas = JSON.parse(localStorage.getItem('tareas')) || [];
+let tareasUsuario = [];
+let usuarios = {};
+let usuario = "";
+let input, lista;
 
-function agregarTarea() {
-    let elementoTarea = document.getElementById("tarea").value;
-    arrayTareas.push(elementoTarea);
-    localStorage.setItem('tareas', JSON.stringify(arrayTareas)); // Se convierte el array en una cadena para almacenarlo en el LS.
-    mostrarTarea();
-    document.getElementById("tarea").value = '';
-}
+document.addEventListener('DOMContentLoaded', () => {
+  usuario = localStorage.getItem('usuarioActivo');
+  if (!usuario) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-function mostrarTarea() {
-    let elementoLista = document.getElementById("listaTareas");
-    elementoLista.innerHTML = '';
+  usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+  if (!usuarios[usuario]) {
+    alert("Usuario no válido");
+    localStorage.removeItem("usuarioActivo");
+    window.location.href = "login.html";
+    return;
+  }
 
-    arrayTareas.forEach((tarea, indice) => {
-        let itemLista = document.createElement("li");
-        itemLista.className = "d-flex align-items-center mb-2";
+  tareasUsuario = usuarios[usuario].tareas || [];
 
-        let textoTarea = document.createElement("span");
-        textoTarea.textContent = tarea;
-        textoTarea.className = "flex-grow-1 ms-3";
+  input = document.getElementById("tarea");
+  lista = document.getElementById("listaTareas");
 
-        let itemBorrar = document.createElement("button");
-        itemBorrar.textContent = "Eliminar";
-        itemBorrar.className = "btn btn-danger btn-sm";
-        itemBorrar.onclick = function () {
-            eliminarTarea(indice);
-        };
+  // Carga las tareas al iniciar
+  renderizarTareas();
 
-        itemLista.appendChild(textoTarea);
-        itemLista.appendChild(itemBorrar);
-        elementoLista.appendChild(itemLista);
-    }); 
-}
-
-function eliminarTarea(indice) {
-    arrayTareas.splice(indice, 1);
-    localStorage.setItem('tareas', JSON.stringify(arrayTareas));
-    mostrarTarea();
-}
-
-// Accion de la tecla ENTER.
-document.getElementById('tarea').addEventListener('keydown', function(event) {
-    if(event.key === 'Enter' || event.key === 13) {
-        agregarTarea();
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      agregarTarea();
     }
+  });
 });
 
-// Cargar las tareas almacenadas cuando se abre la pagina.
-document.addEventListener('DOMContentLoaded', mostrarTarea);
+function guardarTareas() {
+  usuarios[usuario].tareas = tareasUsuario;
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+}
 
-// const tareaRegistradas = localStorage.getItem('tareas'); // Se recupera la cadena JSON del LS.
+function renderizarTareas() {
+    lista.innerHTML = "";
+    tareasUsuario.forEach((tarea, index) => {
+      const li = document.createElement("li");
+      li.className = "d-flex align-items-center mb-2";
+  
+      const span = document.createElement("span");
+      span.textContent = tarea;
+      span.className = "flex-grow-1 ms-3";
+  
+      // Boton de eliminar
+      const btnEliminar = document.createElement("button");
+      btnEliminar.textContent = "Eliminar";
+      btnEliminar.className = "btn btn-danger btn-sm me-2";
+      btnEliminar.onclick = () => {
+        tareasUsuario.splice(index, 1);
+        guardarTareas();
+        renderizarTareas();
+      };
+  
+      // Boton de editar
+      const btnEditar = document.createElement("button");
+      btnEditar.textContent = "Editar";
+      btnEditar.className = "btn btn-warning btn-sm";
+      btnEditar.onclick = () => {
+        const nuevaTarea = prompt("Editar tarea:", tarea);
+        if (nuevaTarea !== null && nuevaTarea.trim() !== "") {
+          tareasUsuario[index] = nuevaTarea.trim();
+          guardarTareas();
+          renderizarTareas();
+        }
+      };
+  
+      li.appendChild(span);
+      li.appendChild(btnEditar);
+      li.appendChild(btnEliminar);
+      lista.appendChild(li);
+    });
+  }  
+
+function agregarTarea() {
+  const tarea = input.value.trim();
+  if (tarea) {
+    tareasUsuario.push(tarea);
+    guardarTareas();
+    renderizarTareas();
+    input.value = "";
+  }
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("usuarioActivo");
+  window.location.href = "login.html";
+}

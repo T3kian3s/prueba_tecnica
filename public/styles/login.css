@@ -1,0 +1,21 @@
+body {
+    font-family: Arial;
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+input,
+button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+}
+
+h2 {
+    text-align: center;
+}
