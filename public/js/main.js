@@ -6,7 +6,7 @@ let input, lista;
 document.addEventListener('DOMContentLoaded', () => {
   usuario = localStorage.getItem('usuarioActivo');
   if (!usuario) {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
     return;
   }
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!usuarios[usuario]) {
     alert("Usuario no válido");
     localStorage.removeItem("usuarioActivo");
-    window.location.href = "login.html";
+    window.location.href = "index.html";
     return;
   }
 
@@ -90,5 +90,5 @@ function agregarTarea() {
 
 function cerrarSesion() {
   localStorage.removeItem("usuarioActivo");
-  window.location.href = "login.html";
+  window.location.href = "index.html";
 }
