@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login & Registro</title>
-  <link rel="stylesheet" href="styles/login.css"/>
+  <link rel="stylesheet" href="/styles/login.css"/>
   <link rel="manifest" href="/manifest.json">
 </head>
 <body>
@@ -27,72 +27,6 @@
     <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia sesión</a></p>
   </div>
 
-  <script>
-    let input = document.getElementById('loginPass');
-    let inputRegister = document.getElementById('regPass');
-
-    input.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      userLogin();
-      }
-    });
-
-    inputRegister.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      userRegister();
-      }
-    });
-
-    if (localStorage.getItem("usuarioActivo")) {
-      window.location.href = "index.html";
-    }
-
-    function mostrarRegistro() {
-      document.getElementById("loginForm").classList.add("hidden");
-      document.getElementById("registerForm").classList.remove("hidden");
-      document.getElementById("formTitle").textContent = "Registro";
-    }
-
-    function mostrarLogin() {
-      document.getElementById("registerForm").classList.add("hidden");
-      document.getElementById("loginForm").classList.remove("hidden");
-      document.getElementById("formTitle").textContent = "Iniciar Sesión";
-    }
-
-    function userRegister() {
-      const correo = document.getElementById("regCorreo").value.trim();
-      const nombre = document.getElementById("regNombre").value.trim();
-      const pass = document.getElementById("regPass").value;
-
-      if (!correo || !nombre || !pass) {
-        alert("Completa todos los campos");
-        return;
-      }
-
-      let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
-      if (usuarios[correo]) {
-        alert("Este correo ya está registrado");
-        return;
-      }
-
-      usuarios[correo] = { usuario: nombre, contraseña: pass, tareas: [] };
-      localStorage.setItem("usuarios", JSON.stringify(usuarios));
-      alert("Registro exitoso. Ya puedes iniciar sesión.");
-      mostrarLogin();
-    }
-
-    function userLogin() {
-      const correo = document.getElementById("loginCorreo").value.trim();
-      const pass = document.getElementById("loginPass").value;
-
-      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
-      if (usuarios[correo] && usuarios[correo].contraseña === pass) {
-        localStorage.setItem("usuarioActivo", correo);
-        window.location.href = "html/gestor-tareas.html";
-      } else {
-        alert("Correo o contraseña incorrectos");
-      }
-    }    
-  </script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
